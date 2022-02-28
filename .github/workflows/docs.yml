@@ -92,6 +92,8 @@ jobs:
       #         --static-hosting-base-path /static-docc/main \
       #         --output-path docs-out/main
 
+      - name: ls
+        run: ls
       - name: (all) Build documentation
         run: >
           for l in $(echo "main"; git tag); do 
@@ -103,12 +105,12 @@ jobs:
             fi; 
           done
       
-      # 9. Publish the result
-      - name: Fix permissions
-        run: 'sudo chown --recursive $USER docs-out'
-      - name: Publish documentation to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@4.1.7
-        with:
-          branch: gh-pages
-          folder: docs-out
-          single-commit: true
+      # # 9. Publish the result
+      # - name: Fix permissions
+      #   run: 'sudo chown --recursive $USER docs-out'
+      # - name: Publish documentation to GitHub Pages
+      #   uses: JamesIves/github-pages-deploy-action@4.1.7
+      #   with:
+      #     branch: gh-pages
+      #     folder: docs-out
+      #     single-commit: true
