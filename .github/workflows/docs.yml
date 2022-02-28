@@ -20,43 +20,43 @@ jobs:
         with:
           fetch-depth: 0
 
-      # # 2. Download and Install Swift 5.5.1
-      # - name: Download Swift 5.5.1
-      #   run: wget -q https://download.swift.org/swift-5.5.1-release/ubuntu2004/swift-5.5.1-RELEASE/swift-5.5.1-RELEASE-ubuntu20.04.tar.gz
-      # - name: Extract Swift 5.5.1
-      #   run: tar xzf swift-5.5.1-RELEASE-ubuntu20.04.tar.gz
-      # - name: Add Swift toolchain to PATH
-      #   run: |
-      #     echo "$GITHUB_WORKSPACE/swift-5.5.1-RELEASE-ubuntu20.04/usr/bin" >> $GITHUB_PATH
+      # 2. Download and Install Swift 5.5.1
+      - name: Download Swift 5.5.1
+        run: wget -q https://download.swift.org/swift-5.5.1-release/ubuntu2004/swift-5.5.1-RELEASE/swift-5.5.1-RELEASE-ubuntu20.04.tar.gz
+      - name: Extract Swift 5.5.1
+        run: tar xzf swift-5.5.1-RELEASE-ubuntu20.04.tar.gz
+      - name: Add Swift toolchain to PATH
+        run: |
+          echo "$GITHUB_WORKSPACE/swift-5.5.1-RELEASE-ubuntu20.04/usr/bin" >> $GITHUB_PATH
 
-      # # 3. Checkout and build Swift-DocC (TODO: Remove once docc is included in the toolchain DL)
-      # - name: Checkout swift-docc
-      #   uses: actions/checkout@v2
-      #   with:
-      #     repository: karwa/swift-docc
-      #     ref: main
-      #     path: swift-docc
-      # - name: Cache DocC
-      #   id: cache-docc
-      #   uses: actions/cache@v2
-      #   with:
-      #     key: swift-url-docc-build
-      #     path: swift-docc/.build
-      # - name: Build swift-docc
-      #   if: ${{ !steps.cache-docc.outputs.cache-hit }}
-      #   run: |
-      #     cd swift-docc; swift build --product docc -c release; cd ..
+      # 3. Checkout and build Swift-DocC (TODO: Remove once docc is included in the toolchain DL)
+      - name: Checkout swift-docc
+        uses: actions/checkout@v2
+        with:
+          repository: karwa/swift-docc # TODO: use apple/swift-docc?
+          ref: main
+          path: swift-docc
+      - name: Cache DocC
+        id: cache-docc
+        uses: actions/cache@v2
+        with:
+          key: swift-url-docc-build
+          path: swift-docc/.build
+      - name: Build swift-docc
+        if: ${{ !steps.cache-docc.outputs.cache-hit }}
+        run: |
+          cd swift-docc; swift build --product docc -c release; cd ..
 
-      # # 4. Checkout and build custom Swift-DocC-Render
-      # - name: Checkout swift-docc-render
-      #   uses: actions/checkout@v2
-      #   with:
-      #     repository: apple/swift-docc-render
-      #     ref: main
-      #     path: swift-docc-render
-      # - name: Build swift-docc-render
-      #   run: |
-      #     cd swift-docc-render; npm install && npm run build; cd ..
+      # 4. Checkout and build custom Swift-DocC-Render
+      - name: Checkout swift-docc-render
+        uses: actions/checkout@v2
+        with:
+          repository: apple/swift-docc-render
+          ref: main
+          path: swift-docc-render
+      - name: Build swift-docc-render
+        run: |
+          cd swift-docc-render; npm install && npm run build; cd ..
 
       # 5. Checkout the gh-pages branch (we want to add to what is already there)
       - name: Checkout gh-pages Branch
@@ -66,8 +66,8 @@ jobs:
           path: docs-out
 
       # # 6. Generate docs for main branch, replacing the existing docs for main.
-      # - name: (main) Clear existing docs
-      #   run: rm -rf docs-out/.git && rm -rf docs-out/main && mkdir -p docs-out/main
+      - name: (main) Clear existing docs
+        run: rm -rf docs-out/.git && rm -rf docs-out/main && mkdir -p docs-out/main
       # - name: (main) Generate SymbolGraph
       #   run: |
       #     mkdir -p .build/symbol-graphs && \
@@ -98,16 +98,22 @@ jobs:
         run: >
           for tag in $(echo "main"; git tag);
           do 
-            if [ "$tag" = "main" ] 
-            then
-              echo "main"
-            fi;
-
             if [ -d "docs-out/$tag" ] 
             then 
-                echo "Directory "$tag" exists." 
+                echo "Documentation for "$tag" already exists." 
             else 
-                echo "Error: Directory "$tag" does not exists." 
+                echo "Generating documentation for "$tag" release.";
+                
+                rm -rf .build/symbol-graphs;
+                mkdir .build/symbol-graphs;
+                swift build \
+                  --target StaticDocC \
+                  -Xswiftc \
+                  -emit-symbol-graph \
+                  -Xswiftc \
+                  -emit-symbol-graph-dir \
+                  -Xswiftc \
+                  .build/symbol-graphs;
             fi;
           done
       
