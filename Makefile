@@ -12,6 +12,6 @@ docbuild:
 
 process-archive:
 	/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/docc process-archive \
-		transform-for-static-hosting "DerivedData/Build/Products/Debug-iphonesimulator/static-docc.doccarchive" \
+		transform-for-static-hosting "DerivedData/Build/Products/Debug-iphonesimulator/StaticDocC.doccarchive" \
 		--output-path docs \
 		--hosting-base-path "static-docc"
