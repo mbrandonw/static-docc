@@ -65,37 +65,43 @@ jobs:
           ref: gh-pages
           path: docs-out
 
-      # 6. Generate docs for main branch, replacing the existing docs for main.
-      - name: (main) Clear existing docs
-        run: rm -rf docs-out/.git && rm -rf docs-out/main && mkdir -p docs-out/main
-      - name: (main) Generate SymbolGraph
-        run: |
-          mkdir -p .build/symbol-graphs && \
-            swift build \
-              --target StaticDocC \
-              -Xswiftc \
-              -emit-symbol-graph \
-              -Xswiftc \
-              -emit-symbol-graph-dir \
-              -Xswiftc \
-              .build/symbol-graphs
-      - name: (main) Build Documentation
-        run: |
-          export DOCC_HTML_DIR="$(pwd)/swift-docc-render/dist" \
-            && swift-docc/.build/release/docc convert Sources/Documentation.docc \
-              --fallback-display-name StaticDocC \
-              --fallback-bundle-identifier co.pointfree.StaticDocC \
-              --fallback-bundle-version 0.0.0 \
-              --additional-symbol-graph-dir \
-              .build/symbol-graphs \
-              --transform-for-static-hosting \
-              --static-hosting-base-path /static-docc/main \
-              --output-path docs-out/main
-
+      # # 6. Generate docs for main branch, replacing the existing docs for main.
+      # - name: (main) Clear existing docs
+      #   run: rm -rf docs-out/.git && rm -rf docs-out/main && mkdir -p docs-out/main
+      # - name: (main) Generate SymbolGraph
+      #   run: |
+      #     mkdir -p .build/symbol-graphs && \
+      #       swift build \
+      #         --target StaticDocC \
+      #         -Xswiftc \
+      #         -emit-symbol-graph \
+      #         -Xswiftc \
+      #         -emit-symbol-graph-dir \
+      #         -Xswiftc \
+      #         .build/symbol-graphs
+      # - name: (main) Build Documentation
+      #   run: |
+      #     export DOCC_HTML_DIR="$(pwd)/swift-docc-render/dist" \
+      #       && swift-docc/.build/release/docc convert Sources/Documentation.docc \
+      #         --fallback-display-name StaticDocC \
+      #         --fallback-bundle-identifier co.pointfree.StaticDocC \
+      #         --fallback-bundle-version 0.0.0 \
+      #         --additional-symbol-graph-dir \
+      #         .build/symbol-graphs \
+      #         --transform-for-static-hosting \
+      #         --static-hosting-base-path /static-docc/main \
+      #         --output-path docs-out/main
 
       - name: (all) Build documentation
         run: |
-          for l in $(echo "main"; git tag); do echo "$l"; done
+          for l in $(echo "main"; git tag); do \
+            if [ -d "$l" ] \
+            then \
+                echo "Directory "$l" exists." \
+            else \
+                echo "Error: Directory "$l" does not exists." \
+            fi; \
+          done
       
       # 9. Publish the result
       - name: Fix permissions
