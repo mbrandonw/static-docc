@@ -1,6 +1,4 @@
-public struct static_docc {
-    public private(set) var text = "Hello, World!"
+/// An important struct.
+public struct Foo {
 
-    public init() {
-    }
 }
