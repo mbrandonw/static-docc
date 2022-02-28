@@ -65,12 +65,13 @@ jobs:
           rm -rf docs-out/main;
 
           for tag in $(echo "main"; git tag);
-          do 
+          do
+            echo "⚠️ Generating documentation for "$tag" release.";
+            
             if [ -d "docs-out/$tag" ] 
             then 
-                echo "Documentation for "$tag" already exists." 
+                echo "✅ Documentation for "$tag" already exists.";
             else 
-                echo "Generating documentation for "$tag" release.";
                 git checkout "$tag";
 
                 rm -rf .build/symbol-graphs;
@@ -94,6 +95,8 @@ jobs:
                   --transform-for-static-hosting \
                   --static-hosting-base-path /static-docc/"$tag" \
                   --output-path docs-out/"$tag";
+
+                echo "✅ Documentation generated for "$tag" release.";
             fi;
           done
       
