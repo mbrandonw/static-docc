@@ -96,7 +96,6 @@ jobs:
         run: >
           rm -rf docs-out/.git;
           rm -rf docs-out/main;
-          mkdir -p docs-out/main;
 
           for tag in $(echo "main"; git tag);
           do 
