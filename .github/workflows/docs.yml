@@ -48,7 +48,7 @@ jobs:
       - name: Checkout swift-docc-render
         uses: actions/checkout@v2
         with:
-          repository: karwa/swift-docc-render
+          repository: apple/swift-docc-render
           ref: main
           path: swift-docc-render
       - name: Build swift-docc-render
