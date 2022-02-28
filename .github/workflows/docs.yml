@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  macos:
+  build:
     runs-on: ubuntu-latest
 
     # 1. Checkout the package (we need a full clone in order to get tags).
@@ -25,7 +25,7 @@ jobs:
     - name: Add Swift toolchain to PATH
       run: |
         echo "$GITHUB_WORKSPACE/swift-5.5.1-RELEASE-ubuntu20.04/usr/bin" >> $GITHUB_PATH
-        
+
     # 3. Checkout and build Swift-DocC (TODO: Remove once docc is included in the toolchain DL)
     - name: Checkout swift-docc
       uses: actions/checkout@v2
