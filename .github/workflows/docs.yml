@@ -93,14 +93,14 @@ jobs:
       #         --output-path docs-out/main
 
       - name: (all) Build documentation
-        run: |
-          for l in $(echo "main"; git tag); do \
-            if [ -d "$l" ] \
-            then \
-                echo "Directory "$l" exists." \
-            else \
-                echo "Error: Directory "$l" does not exists." \
-            fi; \
+        run: >
+          for l in $(echo "main"; git tag); do 
+            if [ -d "$l" ] 
+            then 
+                echo "Directory "$l" exists." 
+            else 
+                echo "Error: Directory "$l" does not exists." 
+            fi; 
           done
       
       # 9. Publish the result
