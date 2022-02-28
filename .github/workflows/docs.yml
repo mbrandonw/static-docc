@@ -43,3 +43,14 @@ jobs:
         if: ${{ !steps.cache-docc.outputs.cache-hit }}
         run: |
           cd swift-docc; swift build --product docc -c release; cd ..
+
+      # 4. Checkout and build custom Swift-DocC-Render
+      - name: Checkout swift-docc-render
+        uses: actions/checkout@v2
+        with:
+          repository: karwa/swift-docc-render
+          ref: main
+          path: swift-docc-render
+      - name: Build swift-docc-render
+        run: |
+          cd swift-docc-render; npm install && npm run build; cd ..
