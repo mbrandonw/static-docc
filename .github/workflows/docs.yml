@@ -93,6 +93,9 @@ jobs:
               --output-path docs-out/main
 
 
+      - name: (all) Build documentation
+        run: |
+          for l in $(echo "main"; git tag); do echo "$l"; done
       
       # 9. Publish the result
       - name: Fix permissions
