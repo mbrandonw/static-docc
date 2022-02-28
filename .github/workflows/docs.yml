@@ -9,37 +9,37 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    steps:
+      # 1. Checkout the package (we need a full clone in order to get tags).
+      #    This must be the root folder for 'github-pages-deploy-action' to work.
+      - name: Checkout Package
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
-    # 1. Checkout the package (we need a full clone in order to get tags).
-    #    This must be the root folder for 'github-pages-deploy-action' to work.
-    - name: Checkout Package
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
+      # 2. Download and Install Swift 5.5.1
+      - name: Download Swift 5.5.1
+        run: wget -q https://download.swift.org/swift-5.5.1-release/ubuntu2004/swift-5.5.1-RELEASE/swift-5.5.1-RELEASE-ubuntu20.04.tar.gz
+      - name: Extract Swift 5.5.1
+        run: tar xzf swift-5.5.1-RELEASE-ubuntu20.04.tar.gz
+      - name: Add Swift toolchain to PATH
+        run: |
+          echo "$GITHUB_WORKSPACE/swift-5.5.1-RELEASE-ubuntu20.04/usr/bin" >> $GITHUB_PATH
 
-    # 2. Download and Install Swift 5.5.1
-    - name: Download Swift 5.5.1
-      run: wget -q https://download.swift.org/swift-5.5.1-release/ubuntu2004/swift-5.5.1-RELEASE/swift-5.5.1-RELEASE-ubuntu20.04.tar.gz
-    - name: Extract Swift 5.5.1
-      run: tar xzf swift-5.5.1-RELEASE-ubuntu20.04.tar.gz
-    - name: Add Swift toolchain to PATH
-      run: |
-        echo "$GITHUB_WORKSPACE/swift-5.5.1-RELEASE-ubuntu20.04/usr/bin" >> $GITHUB_PATH
-
-    # 3. Checkout and build Swift-DocC (TODO: Remove once docc is included in the toolchain DL)
-    - name: Checkout swift-docc
-      uses: actions/checkout@v2
-      with:
-        repository: karwa/swift-docc
-        ref: main
-        path: swift-docc
-    - name: Cache DocC
-      id: cache-docc
-      uses: actions/cache@v2
-      with:
-        key: swift-url-docc-build
-        path: swift-docc/.build
-    - name: Build swift-docc
-      if: ${{ !steps.cache-docc.outputs.cache-hit }}
-      run: |
-        cd swift-docc; swift build --product docc -c release; cd ..
+      # 3. Checkout and build Swift-DocC (TODO: Remove once docc is included in the toolchain DL)
+      - name: Checkout swift-docc
+        uses: actions/checkout@v2
+        with:
+          repository: karwa/swift-docc
+          ref: main
+          path: swift-docc
+      - name: Cache DocC
+        id: cache-docc
+        uses: actions/cache@v2
+        with:
+          key: swift-url-docc-build
+          path: swift-docc/.build
+      - name: Build swift-docc
+        if: ${{ !steps.cache-docc.outputs.cache-hit }}
+        run: |
+          cd swift-docc; swift build --product docc -c release; cd ..
