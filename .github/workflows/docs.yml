@@ -13,12 +13,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # # 1. Checkout the package (we need a full clone in order to get tags).
-      # #    This must be the root folder for 'github-pages-deploy-action' to work.
-      # - name: Checkout Package
-      #   uses: actions/checkout@v2
-      #   with:
-      #     fetch-depth: 0
+      # 1. Checkout the package (we need a full clone in order to get tags).
+      #    This must be the root folder for 'github-pages-deploy-action' to work.
+      - name: Checkout Package
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       # # 2. Download and Install Swift 5.5.1
       # - name: Download Swift 5.5.1
