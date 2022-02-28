@@ -97,7 +97,7 @@ jobs:
       - name: (all) Build documentation
         run: >
           for l in $(echo "main"; git tag); do 
-            if [ -d "$l" ] 
+            if [ -d "docs-out/$l" ] 
             then 
                 echo "Directory "$l" exists." 
             else 
