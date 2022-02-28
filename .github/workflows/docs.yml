@@ -66,8 +66,8 @@ jobs:
           path: docs-out
 
       # # 6. Generate docs for main branch, replacing the existing docs for main.
-      - name: (main) Clear existing docs
-        run: rm -rf docs-out/.git && rm -rf docs-out/main && mkdir -p docs-out/main
+      # - name: (main) Clear existing docs
+      #   run: rm -rf docs-out/.git && rm -rf docs-out/main && mkdir -p docs-out/main
       # - name: (main) Generate SymbolGraph
       #   run: |
       #     mkdir -p .build/symbol-graphs && \
@@ -92,10 +92,12 @@ jobs:
       #         --static-hosting-base-path /static-docc/main \
       #         --output-path docs-out/main
 
-      - name: ls
-        run: ls
       - name: (all) Build documentation
         run: >
+          rm -rf docs-out/.git;
+          rm -rf docs-out/main;
+          mkdir -p docs-out/main;
+
           for tag in $(echo "main"; git tag);
           do 
             if [ -d "docs-out/$tag" ] 
@@ -103,9 +105,9 @@ jobs:
                 echo "Documentation for "$tag" already exists." 
             else 
                 echo "Generating documentation for "$tag" release.";
-                
+
                 rm -rf .build/symbol-graphs;
-                mkdir .build/symbol-graphs;
+                mkdir -p .build/symbol-graphs;
                 swift build \
                   --target StaticDocC \
                   -Xswiftc \
