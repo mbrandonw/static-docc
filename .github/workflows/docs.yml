@@ -58,12 +58,12 @@ jobs:
       #   run: |
       #     cd swift-docc-render; npm install && npm run build; cd ..
 
-      # # 5. Checkout the gh-pages branch (we want to add to what is already there)
-      # - name: Checkout gh-pages Branch
-      #   uses: actions/checkout@v2
-      #   with:
-      #     ref: gh-pages
-      #     path: docs-out
+      # 5. Checkout the gh-pages branch (we want to add to what is already there)
+      - name: Checkout gh-pages Branch
+        uses: actions/checkout@v2
+        with:
+          ref: gh-pages
+          path: docs-out
 
       # # 6. Generate docs for main branch, replacing the existing docs for main.
       # - name: (main) Clear existing docs
